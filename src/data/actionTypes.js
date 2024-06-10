@@ -22,7 +22,6 @@ export const deleteTask = (item) => ({
 export const fetchTasks = () => {
     return (dispatch) => {
         axios.get("http://localhost:5000/tasks").then(r => {
-            console.log('r :', r);
             dispatch({
                 type: FETCH_TASK,
                 payload: r.data
@@ -31,27 +30,27 @@ export const fetchTasks = () => {
     }
 };
 
-export const taskReducer = (state = initialTasks, action) => {
+export const taskReducer = (state = { data: initialTasks, loading: false }, action) => {
     switch (action.type) {
         case CREATE_TASK: {
-            const currTasks = [...state];
+            console.log('state :', state);
+            const currTasks = [...state.data];
             action.payload.id = +((Math.random() * 100).toFixed(0));
             currTasks.push(action.payload);
-            return currTasks;
+            return { data: currTasks };
         }
 
         case DELETE_TASK: {
-            const currTasks = [...state];
+            const currTasks = [...state.data];
             const ind = currTasks.findIndex(item => item.id === action.payload.id);
             if (ind > -1) {
                 currTasks.splice(ind, 1);
             }
-            return currTasks;
+            return { data: currTasks };
         }
 
         case FETCH_TASK: {
-            console.log('action :', action);
-            return action.payload
+            return { data: action.payload, loading: false }
         }
 
         default: {

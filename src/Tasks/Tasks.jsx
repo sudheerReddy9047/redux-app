@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import "./Tasks.css";
 import { useState } from "react";
 import Collapsible from '../Collapsible/Collapsible';
-import { useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { createTask, deleteTask, fetchTasks } from '../data/actionTypes';
 
-function Tasks() {
+function Tasks(props) {
+
+    console.log('Props :', props);
     let [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
 
     let [newTask, setNewTask] = useState({
@@ -13,7 +15,7 @@ function Tasks() {
         dateTime: ''
     });
 
-    let dispatchAction = useDispatch();
+    let dispatchAction = props.dispatch;
 
     let onSaveClick = () => {
         onCancelClick();
@@ -32,7 +34,7 @@ function Tasks() {
 
     useEffect(() => dispatchAction(fetchTasks()), [dispatchAction]);
 
-    const savedTasks = useSelector(e => e.tasks);
+    const savedTasks = props.tasks;
 
     return (
         <div className="outer-container">
@@ -100,7 +102,7 @@ function Tasks() {
                 <div className="content-body">
 
                     {
-                        savedTasks.map(eachTask => (
+                        savedTasks?.data?.map(eachTask => (
                             <div className="task" key={eachTask.id}>
                                 <div className="task-body">
                                     <div className="task-title">
@@ -125,6 +127,11 @@ function Tasks() {
     )
 }
 
-export default Tasks;
+const mapStateToProps = (state) => {
+    return {
+        tasks: state.tasks
+    }
+}
+export default connect(mapStateToProps)(Tasks);
 
 
