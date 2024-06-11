@@ -15,8 +15,8 @@ function Tasks(props) {
         dateTime: ''
     });
 
+    let { dispatchTasksFetch } = props;
     let dispatchAction = props.dispatch;
-
     let onSaveClick = () => {
         onCancelClick();
         dispatchAction(createTask(newTask));
@@ -32,7 +32,7 @@ function Tasks(props) {
 
     let onTaskDelete = (item) => dispatchAction(deleteTask(item));
 
-    useEffect(() => dispatchAction(fetchTasks()), [dispatchAction]);
+    useEffect(() => dispatchTasksFetch(), [dispatchTasksFetch]);
 
     const savedTasks = props.tasks;
 
@@ -132,6 +132,11 @@ const mapStateToProps = (state) => {
         tasks: state.tasks
     }
 }
-export default connect(mapStateToProps)(Tasks);
+
+const mapDispatchToProps = (dispatch) => ({
+    dispatch,
+    dispatchTasksFetch: () => dispatch(fetchTasks()),
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
 
 
