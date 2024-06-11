@@ -32,7 +32,12 @@ function Tasks(props) {
 
     let onTaskDelete = (item) => dispatchAction(deleteTask(item));
 
-    useEffect(() => dispatchTasksFetch(), [dispatchTasksFetch]);
+    useEffect(() => {
+        async function tmpDataFetch() {
+            dispatchTasksFetch();
+        }
+        tmpDataFetch();
+    }, [dispatchTasksFetch]);
 
     const savedTasks = props.tasks;
 
